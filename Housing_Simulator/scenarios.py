@@ -73,8 +73,13 @@ class ScenarioEngine:
 
         return results
 
-    def run_income_vs_rate_matrix(self, income_range: list[float], rate_range: list[float], down_payment: float, base_market: MarketConditions):
-        pass 
+    def run_income_vs_rate_matrix(self, incomes: list[float], rates: list[float], buyer: BuyerProfile | None = None, market: MarketConditions | None = None):
+        if buyer is None:
+            buyer = self.default_buyers[0]
+        if market is None:
+            market = self.default_market
+
+        
 
 def get_default_preset_buyers() -> list[BuyerProfile]:
     pass
