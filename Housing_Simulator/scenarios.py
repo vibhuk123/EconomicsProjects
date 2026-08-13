@@ -56,7 +56,7 @@ class ScenarioEngine:
         baseline_buyer = BuyerProfile(buyer.annual_income, buyer.down_payment, buyer.monthly_student_loans, 0)
 
         while current_debt <= end_debt + 1e-9:
-            temp_buyer = BuyerProfile(buyer.annual_income, buyer.down_payment, buyer.monthly_student_loans, current_debt)
+            temp_buyer = BuyerProfile('temp buyer', buyer.annual_income, buyer.down_payment, buyer.monthly_student_loans, current_debt)
             temp_calculation = calculate_max_affordability(temp_buyer, market)
             baseline_calculation = calculate_max_affordability(baseline_buyer, market)
             baseline_price = baseline_calculation.max_affordable_price
@@ -84,7 +84,7 @@ class ScenarioEngine:
 
         for income in incomes:
             for rate in rates:
-                temp_buyer = BuyerProfile(income, buyer.down_payment, buyer.monthly_student_loans, buyer.monthly_other_debts)
+                temp_buyer = BuyerProfile('temp buyer', income, buyer.down_payment, buyer.monthly_student_loans, buyer.monthly_other_debts)
                 temp_market = MarketConditions(rate, market.property_tax_rate, market.annual_insurance_rate, market.loan_term_years, market.pmi_rate, market.front_end_dti_limit, market.back_end_dti_limit)
                 temp_result = calculate_max_affordability(temp_buyer, temp_market)
                 temp_dict = {
@@ -101,32 +101,38 @@ class ScenarioEngine:
 def get_default_preset_buyers() -> list[BuyerProfile]:
     default_buyers = [
         BuyerProfile(
+            name='Typical Buyer',
             annual_income=120_000,
             down_payment=60_000
         ),
         BuyerProfile(
+            name='Student Debt Buyer',
             annual_income=65_000,
             down_payment=15_000,
             monthly_student_loans=500
         ),
         BuyerProfile(
+            name='High-Income Buyer',
             annual_income=200_000,
             down_payment=150_000,
             monthly_other_debts=800
         ),
         BuyerProfile(
+            name='High-Debt Buyer',
             annual_income=45_000,
             down_payment=5_000,
             monthly_student_loans=750,
             monthly_other_debts=300
         ),
         BuyerProfile(
+            name='Debt + Large Down Payment Buyer',
             annual_income=90_000,
             down_payment=100_000,
             monthly_student_loans=750,
             monthly_other_debts=300
         ),
         BuyerProfile(
+            name='Zero-Down Buyer',
             annual_income=75_000,
             down_payment=0
         )
