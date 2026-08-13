@@ -73,13 +73,28 @@ class ScenarioEngine:
 
         return results
 
-    def run_income_vs_rate_matrix(self, incomes: list[float], rates: list[float], buyer: BuyerProfile | None = None, market: MarketConditions | None = None):
+    def run_income_vs_rate_matrix(self, incomes: list[float], rates: list[float], buyer: BuyerProfile | None = None, market: MarketConditions | None = None) -> list[dict]:
         if buyer is None:
             buyer = self.default_buyers[0]
         if market is None:
             market = self.default_market
 
-        
+        result = []
+
+        for income in incomes:
+            for rate in rates:
+                temp_buyer = BuyerProfile(income, buyer.down_payment, buyer.monthly_student_loans, buyer.monthly_other_debts)
+                temp_market = MarketConditions(rate, market.property_tax_rate, market.annual_insurance_rate, market.loan_term_years, market.pmi_rate, market.front_end_dti_limit, market.back_end_dti_limit)
+                temp_result = calculate_max_affordability(temp_buyer, temp_market)
+                temp_dict = {
+                    'annual_income': income,
+                    'interest_rate': rate,
+                    'max_affordable_price': round(temp_result.max_affordable_price, 2),
+                    'limiting_factor': temp_result.limiting_factor
+                }
+                result.append(temp_dict)
+
+        return result
 
 def get_default_preset_buyers() -> list[BuyerProfile]:
     pass
