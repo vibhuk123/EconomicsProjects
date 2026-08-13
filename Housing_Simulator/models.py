@@ -14,7 +14,7 @@ class BuyerProfile:
         if self.down_payment < 0:
             raise ValueError('Down payment can\'t be negative!')
         if self.monthly_student_loans < 0 or self.monthly_other_debts < 0:
-            raise ValueError('Monthly debt obhligations can\'t be negative!')
+            raise ValueError('Monthly debt obligations can\'t be negative!')
 
     @property
     def monthly_income(self) -> float:
@@ -49,7 +49,7 @@ class MarketConditions:
             self.back_end_dti_limit /= 100
 
         if self.interest_rate < 0:
-            raise ValueError('Interest must be greater than 0!')
+            raise ValueError('Interest must be 0 or more!')
         if self.loan_term_years <= 0:
             raise ValueError('Loan term must be a positive integer!')
 
@@ -68,7 +68,7 @@ class Property:
 
     def __post_init__(self) -> None:
         if self.price <= 0:
-            raise ValueError('House price must be greaqter than 0!')
+            raise ValueError('House price must be greater than 0!')
         if self.hoa_monthly_fee < 0:
             raise ValueError('Hoa fee must not be negative!')
 
