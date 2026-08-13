@@ -55,7 +55,7 @@ class ScenarioEngine:
 
         baseline_buyer = BuyerProfile(buyer.annual_income, buyer.down_payment, buyer.monthly_student_loans, 0)
 
-        while current_debt <= start_debt + 1e-9:
+        while current_debt <= end_debt + 1e-9:
             temp_buyer = BuyerProfile(buyer.annual_income, buyer.down_payment, buyer.monthly_student_loans, current_debt)
             temp_calculation = calculate_max_affordability(temp_buyer, market)
             baseline_calculation = calculate_max_affordability(baseline_buyer, market)
@@ -69,6 +69,7 @@ class ScenarioEngine:
                 'purchasing_power_lost': round(baseline_price - temp_calculation.max_affordable_price, 2)
             }
 
+            results.append(temp_dict)
             current_debt += step
 
         return results
@@ -88,7 +89,7 @@ class ScenarioEngine:
                 temp_result = calculate_max_affordability(temp_buyer, temp_market)
                 temp_dict = {
                     'annual_income': income,
-                    'interest_rate': rate,
+                    'interest_rate': round(rate, 4),
                     'max_affordable_price': round(temp_result.max_affordable_price, 2),
                     'limiting_factor': temp_result.limiting_factor
                 }
@@ -96,8 +97,52 @@ class ScenarioEngine:
 
         return result
 
+# Get a default list of buyers of different types
 def get_default_preset_buyers() -> list[BuyerProfile]:
-    pass
+    default_buyers = [
+        BuyerProfile(
+            annual_income=120_000,
+            down_payment=60_000
+        ),
+        BuyerProfile(
+            annual_income=65_000,
+            down_payment=15_000,
+            monthly_student_loans=500
+        ),
+        BuyerProfile(
+            annual_income=200_000,
+            down_payment=150_000,
+            monthly_other_debts=800
+        ),
+        BuyerProfile(
+            annual_income=45_000,
+            down_payment=5_000,
+            monthly_student_loans=750,
+            monthly_other_debts=300
+        ),
+        BuyerProfile(
+            annual_income=90_000,
+            down_payment=100_000,
+            monthly_student_loans=750,
+            monthly_other_debts=300
+        ),
+        BuyerProfile(
+            annual_income=75_000,
+            down_payment=0
+        )
+    ]
+
+    return default_buyers
 
 def get_default_market() -> MarketConditions:
-    pass
+    default_market = MarketConditions(
+        interest_rate=6.5,
+        property_tax_rate=1.1,
+        annual_insurance_rate=0.5,
+        loan_term_years=30,
+        pmi_rate=0.75,
+        front_end_dti_limit=28,
+        back_end_dti_limit=36
+    )
+
+    return default_market
