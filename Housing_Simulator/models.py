@@ -3,6 +3,7 @@ from typing import Optional
 
 @dataclass
 class BuyerProfile:
+    name: str
     annual_income: float
     down_payment: float
     monthly_student_loans: float = 0.0
