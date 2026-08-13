@@ -1,11 +1,13 @@
 # Main app
-from scenarios import get_default_market
-from os import system
+from scenarios import get_default_market, get_default_preset_buyers
+from models import BuyerProfile, MarketConditions
+import subprocess
 from time import sleep
 
 default_market = get_default_market()
 
 def show_main_menu():
+    subprocess.run('clear')
     print("\n=================================================")
     print("=        Housing Affordability Simulator        =")
     print("=================================================")
@@ -25,21 +27,142 @@ def show_main_menu():
     print('7. Change market conditions')
     print('8. Exit')
 
+# Option 1 Functions
+def analyze_buyer():
+    subprocess.run('clear')
+    print('1. Analyze a buyer')
+    buyer = get_buyer()
+    if buyer is None:
+        return
+    market = get_market()
+    if market is None:
+        return
+
+def get_buyer() -> BuyerProfile:
+    subprocess.run('clear')
+    buyers = get_default_preset_buyers()
+    buyer = None
+
+    print('Choose Buyer:')
+    print('\n1. Typical Buyer')
+    print('2. Student Debt Buyer')
+    print('3. High-Income Buyer')
+    print('4. High-Debt Buyer')
+    print('5. Debt + Large Down Payment Buyer')
+    print('6. Zero-Down Buyer')
+    print('7. Custom Buyer')
+    print('0. Back')
+
+    choice = int(input('\nPick a buyer: '))
+
+    if choice == 0:
+        print('\nExiting buyer analyzer!')
+        sleep(1)
+        return None
+    elif choice == 1:
+        buyer = buyers[0]
+    elif choice == 2:
+        buyer = buyers[1]
+    elif choice == 3:
+        buyer = buyers[2]
+    elif choice == 4:
+        buyer = buyers[3]
+    elif choice == 5:
+        buyer = buyers[4]
+    elif choice == 6:
+        buyer = buyers[5]
+    elif choice == 7:
+        buyer = create_custom_buyer()
+    else:
+        print('\nInvalid selection! Please choose one of the options available!')
+        get_buyer()
+
+    if buyer is not None:
+        print(f'\nYou picked buyer: {buyer.name}, moving on to market selection!')
+    sleep(2)
+    return buyer
+
+def create_custom_buyer() -> BuyerProfile:
+    print('\nCreate a custom buyer!')
+    buyer_name = str(input('Enter buyer name: '))
+    buyer_annual_income = float(input('Enter buyer\'s annual income: $'))
+    buyer_down_payment = float(input('Enter buyer\'s down payment: $'))
+    buyer_monthly_student_loans = float(input('Enter buyer\'s monthly student loan payment: $'))
+    buyer_monthly_debts = float(input('Enter buyer\'s monthly debt payment: $'))
+
+    custom_buyer = BuyerProfile(name=buyer_name, annual_income=buyer_annual_income, down_payment=buyer_down_payment, monthly_student_loans=buyer_monthly_student_loans, monthly_other_debts=buyer_monthly_debts)
+
+    return custom_buyer
+
+def get_market():
+    subprocess.run('clear')
+
+    print('Choose a market:')
+    print('1. Default market')
+    print('2. Custom market')
+    print ('0. Back')
+
+    market = int(input('\nPick a market: '))
+    if market == 0:
+        print('\nExiting buyer analyzer!')
+        sleep(1)
+        return None
+
+def display_affordability_results():
+    pass
+
+def evaluate_property():
+    pass
+
+def compare_buyers():
+    pass
+
+def analyze_interest_rate():
+    pass
+
+def analyze_debt_burden():
+    pass
+
+def analyze_income_vs_interest_rate():
+    pass
+
+def change_market_conditions():
+    pass
+
 def main():
     simulation_running = True
 
     while simulation_running:
         show_main_menu()
         option = int(input('\nSelect an option: '))
-        if option == 8:
+        if option == 1:
+            print('\nStarting buyer analyzer...')
+            sleep(0.5)
+            analyze_buyer()
+        elif option == 2:
+            evaluate_property()
+        elif option == 3:
+            compare_buyers()
+        elif option == 4:
+            analyze_interest_rate()
+        elif option == 5:
+            analyze_debt_burden()
+        elif option == 6:
+            analyze_income_vs_interest_rate()
+        elif option == 7:
+            change_market_conditions()
+        elif option == 8:
             print('\nExiting...')
             sleep(1)
             simulation_running = False
+        else:
+            print('\nInvalid selection! Please pick again!')
+            sleep(1)
 
-    system('clear')
+    subprocess.run('clear')
     print('SIMULATION OVER...')
-    sleep(0.5)
-    system('clear')
+    sleep(1)
+    subprocess.run('clear')
 
 if __name__ == '__main__':
     main()
