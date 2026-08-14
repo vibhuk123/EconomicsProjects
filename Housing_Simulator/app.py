@@ -1,6 +1,7 @@
 # Main app
 from scenarios import get_default_market, get_default_preset_buyers
-from models import BuyerProfile, MarketConditions
+from models import BuyerProfile, MarketConditions, AffordabilityResult
+from engine import calculate_max_affordability
 import subprocess
 from time import sleep
 
@@ -9,7 +10,7 @@ default_market = get_default_market()
 def show_main_menu():
     subprocess.run('clear')
     print("\n=================================================")
-    print("=        Housing Affordability Simulator        =")
+    print("=        HOUSING AFFORDABILITY SIMULATOR        =")
     print("=================================================")
     print('\nCurrent Market')
     print(f'    Interest Rate: {default_market.interest_rate}')
@@ -38,48 +39,59 @@ def analyze_buyer():
     if market is None:
         return
 
+    result = calculate_max_affordability(buyer, market)
+    display_affordability_results(buyer, market, result)
+
+    input('\nPress Enter to return to the main menu...')
+
 def get_buyer() -> BuyerProfile:
     subprocess.run('clear')
     buyers = get_default_preset_buyers()
     buyer = None
 
-    print('===============Choose Buyer===============')
-    print('=                                        =')
-    print('=    1. Typical Buyer                    =')
-    print('=    2. Student Debt Buyer               =')
-    print('=    3. High-Income Buyer                =')
-    print('=    4. High-Debt Buyer                  =')
-    print('=    5. Debt + Large Down Payment Buyer  =')
-    print('=    6. Zero-Down Buyer                  =')
-    print('=    7. Custom Buyer                     =')
-    print('=    0. Back                             =')
-    print('=                                        =')
-    print('==========================================')
+    while True:
+        print('===============Choose Buyer===============')
+        print('=                                        =')
+        print('=    1. Typical Buyer                    =')
+        print('=    2. Student Debt Buyer               =')
+        print('=    3. High-Income Buyer                =')
+        print('=    4. High-Debt Buyer                  =')
+        print('=    5. Debt + Large Down Payment Buyer  =')
+        print('=    6. Zero-Down Buyer                  =')
+        print('=    7. Custom Buyer                     =')
+        print('=    0. Back                             =')
+        print('=                                        =')
+        print('==========================================')
 
-    choice = int(input('\nPick a buyer: '))
+        choice = int(input('\nPick a buyer: '))
 
-    if choice == 0:
-        print('\nExiting buyer analyzer!')
-        sleep(1)
-        return None
-    elif choice == 1:
-        buyer = buyers[0]
-    elif choice == 2:
-        buyer = buyers[1]
-    elif choice == 3:
-        buyer = buyers[2]
-    elif choice == 4:
-        buyer = buyers[3]
-    elif choice == 5:
-        buyer = buyers[4]
-    elif choice == 6:
-        buyer = buyers[5]
-    elif choice == 7:
-        buyer = create_custom_buyer()
-    else:
-        print('\nInvalid selection! Please choose one of the options available!')
-        sleep(1)
-        get_buyer()
+        if choice == 0:
+            print('\nExiting buyer analyzer!')
+            sleep(1)
+            return None
+        elif choice == 1:
+            buyer = buyers[0]
+            break
+        elif choice == 2:
+            buyer = buyers[1]
+            break
+        elif choice == 3:
+            buyer = buyers[2]
+            break
+        elif choice == 4:
+            buyer = buyers[3]
+            break
+        elif choice == 5:
+            buyer = buyers[4]
+            break
+        elif choice == 6:
+            buyer = buyers[5]
+            break
+        elif choice == 7:
+            buyer = create_custom_buyer()
+            break
+        else:
+            print('\nInvalid selection! Please choose one of the options available!')
 
     if buyer is not None:
         print(f'\nYou picked buyer: {buyer.name}, moving on to market selection!')
@@ -103,27 +115,28 @@ def get_market() -> MarketConditions:
 
     market = None
 
-    print('===============Choose a market===============')
-    print('=                                           =')
-    print('=    1. Default market                      =')
-    print('=    2. Custom market                       =')
-    print('=    0. Back                                =')
-    print('=                                           =')
-    print('=============================================')
+    while True:
+        print('===============Choose a market===============')
+        print('=                                           =')
+        print('=    1. Default market                      =')
+        print('=    2. Custom market                       =')
+        print('=    0. Back                                =')
+        print('=                                           =')
+        print('=============================================')
 
-    market_choice = int(input('\nPick a market: '))
-    if market_choice == 0:
-        print('\nExiting buyer analyzer!')
-        sleep(1)
-        return None
-    elif market_choice == 1:
-        market = get_default_market()
-    elif market_choice == 2:
-        market = build_custom_market()
-    else:
-        print('\nInvalid Selection! Please pick a valid selection!')
-        sleep(1)
-        get_market()
+        market_choice = int(input('\nPick a market: '))
+        if market_choice == 0:
+            print('\nExiting buyer analyzer!')
+            sleep(1)
+            return None
+        elif market_choice == 1:
+            market = get_default_market()
+            break
+        elif market_choice == 2:
+            market = build_custom_market()
+            break
+        else:
+            print('\nInvalid Selection! Please pick a valid selection!')
 
     return market
 
@@ -141,8 +154,20 @@ def build_custom_market() -> MarketConditions:
 
     return custom_market
 
-def display_affordability_results():
-    pass
+def display_affordability_results(buyer: BuyerProfile, market: MarketConditions, result: AffordabilityResult) -> None:
+    subprocess.run('clear')
+    print('=========================================')
+    print('         AFFORDABILITY ANALYSIS          ')
+    print('=========================================')
+    print(f'\nBuyer: {buyer.name}\n')
+    print(f'Annual Income:         ${buyer.annual_income}')
+    print(f'Down Payment:          ${buyer.down_payment}')
+    print(f'Student Loans:         ${buyer.monthly_student_loans}')
+    print(f'Other Debt:            ${buyer.monthly_other_debts}')
+    print('\nMarket\n')
+    print(f'Interest Rate:          {market.interest_rate}%')
+    print(f'Propert Tax:            {market.property_tax_rate}%')
+    print(f'Loan Term:              {market.loan_term_years} years')
 
 def evaluate_property():
     pass
