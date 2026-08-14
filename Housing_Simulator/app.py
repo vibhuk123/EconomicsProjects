@@ -30,7 +30,7 @@ def show_main_menu():
 # Option 1 Functions
 def analyze_buyer():
     subprocess.run('clear')
-    print('1. Analyze a buyer')
+    print('===============1. Analyze a buyer===============')
     buyer = get_buyer()
     if buyer is None:
         return
@@ -43,15 +43,18 @@ def get_buyer() -> BuyerProfile:
     buyers = get_default_preset_buyers()
     buyer = None
 
-    print('Choose Buyer:')
-    print('\n1. Typical Buyer')
-    print('2. Student Debt Buyer')
-    print('3. High-Income Buyer')
-    print('4. High-Debt Buyer')
-    print('5. Debt + Large Down Payment Buyer')
-    print('6. Zero-Down Buyer')
-    print('7. Custom Buyer')
-    print('0. Back')
+    print('===============Choose Buyer===============')
+    print('=                                        =')
+    print('=    1. Typical Buyer                    =')
+    print('=    2. Student Debt Buyer               =')
+    print('=    3. High-Income Buyer                =')
+    print('=    4. High-Debt Buyer                  =')
+    print('=    5. Debt + Large Down Payment Buyer  =')
+    print('=    6. Zero-Down Buyer                  =')
+    print('=    7. Custom Buyer                     =')
+    print('=    0. Back                             =')
+    print('=                                        =')
+    print('==========================================')
 
     choice = int(input('\nPick a buyer: '))
 
@@ -75,6 +78,7 @@ def get_buyer() -> BuyerProfile:
         buyer = create_custom_buyer()
     else:
         print('\nInvalid selection! Please choose one of the options available!')
+        sleep(1)
         get_buyer()
 
     if buyer is not None:
@@ -83,7 +87,7 @@ def get_buyer() -> BuyerProfile:
     return buyer
 
 def create_custom_buyer() -> BuyerProfile:
-    print('\nCreate a custom buyer!')
+    print('\n===============Create a custom buyer!===============')
     buyer_name = str(input('Enter buyer name: '))
     buyer_annual_income = float(input('Enter buyer\'s annual income: $'))
     buyer_down_payment = float(input('Enter buyer\'s down payment: $'))
@@ -94,19 +98,48 @@ def create_custom_buyer() -> BuyerProfile:
 
     return custom_buyer
 
-def get_market():
+def get_market() -> MarketConditions:
     subprocess.run('clear')
 
-    print('Choose a market:')
-    print('1. Default market')
-    print('2. Custom market')
-    print ('0. Back')
+    market = None
 
-    market = int(input('\nPick a market: '))
-    if market == 0:
+    print('===============Choose a market===============')
+    print('=                                           =')
+    print('=    1. Default market                      =')
+    print('=    2. Custom market                       =')
+    print('=    0. Back                                =')
+    print('=                                           =')
+    print('=============================================')
+
+    market_choice = int(input('\nPick a market: '))
+    if market_choice == 0:
         print('\nExiting buyer analyzer!')
         sleep(1)
         return None
+    elif market_choice == 1:
+        market = get_default_market()
+    elif market_choice == 2:
+        market = build_custom_market()
+    else:
+        print('\nInvalid Selection! Please pick a valid selection!')
+        sleep(1)
+        get_market()
+
+    return market
+
+def build_custom_market() -> MarketConditions:
+    print('\nCreate a custom market:\n')
+    market_interest_rate = float(input('Interest Rate: '))
+    market_property_tax_rate = float(input('Property Tax Rate: '))
+    market_annual_insurance_rate = float(input('Annual Insurance Rate: '))
+    market_loan_term_years = int(input('Loan Term Years: '))
+    market_pmi_rate = float(input('PMI Rate: '))
+    market_front_end_dti_limit = float(input('Front-End DTI Limit: '))
+    market_back_end_dti_limit = float(input('Back-End DTI Limit: '))
+
+    custom_market = MarketConditions(interest_rate=market_interest_rate, property_tax_rate=market_property_tax_rate, annual_insurance_rate=market_annual_insurance_rate, loan_term_years=market_loan_term_years, pmi_rate=market_pmi_rate, front_end_dti_limit=market_front_end_dti_limit, back_end_dti_limit=market_back_end_dti_limit)
+
+    return custom_market
 
 def display_affordability_results():
     pass
