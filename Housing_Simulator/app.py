@@ -167,9 +167,11 @@ def display_affordability_results(buyer: BuyerProfile, market: MarketConditions,
     print(f'Student Loans:         ${buyer.monthly_student_loans}')
     print(f'Other Debt:            ${buyer.monthly_other_debts}')
     print('\nMarket Conditions\n')
-    print(f'Interest Rate:          {market.interest_rate}%')
-    print(f'Propert Tax:            {market.property_tax_rate}%')
+    print('-----------------------------------------')
+    print(f'Interest Rate:          {market.interest_rate*100}%')
+    print(f'Propert Tax:            {market.property_tax_rate*100}%')
     print(f'Loan Term:              {market.loan_term_years} years')
+    print(f'PMI Rate:               {market.pmi_rate*100}%')
 
 def evaluate_property():
     pass
