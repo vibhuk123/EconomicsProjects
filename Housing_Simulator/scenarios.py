@@ -144,9 +144,9 @@ def get_default_market() -> MarketConditions:
     default_market = MarketConditions(
         interest_rate=6.5,
         property_tax_rate=1.1,
-        annual_insurance_rate=0.5,
+        annual_insurance_rate=0.005,
         loan_term_years=30,
-        pmi_rate=0.75,
+        pmi_rate=0.0075,
         front_end_dti_limit=28,
         back_end_dti_limit=36
     )
